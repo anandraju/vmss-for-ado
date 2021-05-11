@@ -1,6 +1,11 @@
-data "azurerm_image" "search" {
-  name                = "myCustomImage"
-  resource_group_name = azurerm_resource_group.devops_vmss.name
+data "azurerm_resource_group" "image" {
+  name = "devops_rg"
+}
+
+data "azurerm_image" "image" {
+  name                = "Devops_VM-image-20210511173856"
+  resource_group_name = data.azurerm_resource_group.image.name
+  #id = azurerm_image.image.id
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "buildagent-vmss" {
@@ -9,7 +14,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "buildagent-vmss" {
   location            = azurerm_resource_group.devops_vmss_ado.location
   sku                 = "Standard_F2"
   instances           = 1
-  source_image_id     = data.azurerm_image.search.id
+  source_image_id     = data.azurerm_image.image.id
 
   overprovision          = false
   single_placement_group = false
